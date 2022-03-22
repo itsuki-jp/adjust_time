@@ -23,3 +23,11 @@ function add_name(add_name_input) {
 NAME_ADD_BTN.onclick = () => {
     add_name(NAME_INPUT.value);
 }
+
+NAME_INPUT.onkeydown = event => {
+    console.log("keydown");
+    if (event.key === 'Enter') {
+        console.log("enter");
+        add_name(NAME_INPUT.value);
+    }
+}
