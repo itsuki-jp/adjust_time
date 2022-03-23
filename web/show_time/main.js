@@ -116,6 +116,7 @@ function edit_user_time(unique_id_name, add_name_input) {
     let new_ul = document.createElement("ul"); // ユーザーの空いている時間を表示するリスト
     TIME_MANAGE.appendChild(new_ul);
 
+    // ユーザーが今まで入力した時間を表示する
     show_time(unique_id_name, new_ul);
 
     let id_time = 0; // 何個目の入力か把握する
@@ -146,7 +147,6 @@ function add_time(unique_id_name, new_input, new_ul) {
 
     add_time_co(unique_id_name, unique_id_time, new_ul, user_input_time);
 
-    // console.log(TIME_MANAGE_OBJ);
     TIME_MANAGE_OBJ[unique_id_name].sets.add(TIME_MANAGE_OBJ[unique_id_name].unique_id_time);
     TIME_MANAGE_OBJ[unique_id_name].unique_id_time++;
 }
