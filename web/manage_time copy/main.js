@@ -4,7 +4,7 @@ const DISPLAY_NAME = document.getElementById("display_name");
 const TIME_MANAGE = document.getElementById("manage");
 
 /**
- * 各人の時間を管理するオブジェクト {0:{unique_id_time:x,sets:Set(), 0:a},1:{},..n:{}}
+ * 各人の時間を管理するオブジェクト {0:{unique_id_time:x, 0:a},1:{},..n:{}}
  * @type {Object}
  */
 const TIME_MANAGE_OBJ = {};
@@ -49,7 +49,6 @@ function add_name(add_name_input) {
     let unique_id_name = id_name;
     TIME_MANAGE_OBJ[unique_id_name] = {};
     TIME_MANAGE_OBJ[unique_id_name].unique_id_time = 0;
-    TIME_MANAGE_OBJ[unique_id_name].sets = new Set();
     ID_SET.add(unique_id_name);
 
     // 大枠
@@ -81,7 +80,7 @@ function add_name(add_name_input) {
     new_mng_btn.innerText = "空いてる時間を編集";
     new_div.appendChild(new_mng_btn);
     new_mng_btn.onclick = () => {
-        edit_user_time(unique_id_name, add_name_input);
+        edit_free_time(unique_id_name, add_name_input);
     }
 
     // 子要素にする
@@ -89,6 +88,10 @@ function add_name(add_name_input) {
     id_name++;
 }
 
+/**
+ * 削除ボタンが押されたときの処理をまとめたい
+ */
+function del() {}
 
 /**
  * 「空いている時間を調節」を押されたときの処理
@@ -96,8 +99,7 @@ function add_name(add_name_input) {
  * @param {add_name_input} ユーザーの名前
  * @return None
  */
-function edit_user_time(unique_id_name, add_name_input) {
-    console.log(TIME_MANAGE_OBJ);
+function edit_free_time(unique_id_name, add_name_input) {
     // 基本的なUI
     TIME_MANAGE.innerHTML = "";
     name_manage_status = unique_id_name;
@@ -116,93 +118,46 @@ function edit_user_time(unique_id_name, add_name_input) {
     let new_ul = document.createElement("ul"); // ユーザーの空いている時間を表示するリスト
     TIME_MANAGE.appendChild(new_ul);
 
-    show_time(unique_id_name, new_ul);
-
     let id_time = 0; // 何個目の入力か把握する
 
     // 追加ボタンが押されたときの処理（時間を追加された時）
     new_btn_add.onclick = () => {
-        add_time(unique_id_name, new_input, new_ul);
-    }
-    new_input.onkeydown = event => {
-        if (event.key === 'Enter') {
-            add_time(unique_id_name, new_input, new_ul);
+        let unique_id_time = TIME_MANAGE_OBJ[unique_id_name].unique_id_time;
+        let user_input_time = new_input.value;
+
+        // 時間を追加
+        TIME_MANAGE_OBJ[unique_id_name][unique_id_time] = user_input_time;
+
+        // まとめる
+        // new_ulに（li, button）を個別に追加したくない→（li, button）をdivに追加し、divをulに追加する→TIME_MANGEに追加
+
+        // li, button）をdivに追加
+        // divを作る
+        let new_div = document.createElement("div");
+
+        // liを作り、divの子要素にする
+        let new_li = document.createElement("li");
+        new_li.innerText = user_input_time;
+        new_div.appendChild(new_li);
+
+        // buttonを作り、divの子要素にする
+        let new_btn_rmv = create_button(new_div, "削除");
+        new_btn_rmv.onclick = () => {
+            delete TIME_MANAGE_OBJ[unique_id_name][unique_id_time];
+            TIME_MANAGE.removeChild(new_btn_rmv.parentNode);
+            console.log(TIME_MANAGE_OBJ);
         }
-    }
-}
-/**
- * 時間調節の「追加」を押されたときの処理
- * @param {unique_id_name} ユーザーのid
- * @param {new_input} 時間の入力欄の要素
- * @param {new_ul} 時間を表示するulの要素
- * @return None
- */
-function add_time(unique_id_name, new_input, new_ul) {
-    let unique_id_time = TIME_MANAGE_OBJ[unique_id_name].unique_id_time;
-    let user_input_time = new_input.value;
 
-    // 時間を追加
-    TIME_MANAGE_OBJ[unique_id_name][unique_id_time] = user_input_time;
+        // divをulに追加する
+        new_ul.appendChild(new_div);
 
-    add_time_co(unique_id_name, unique_id_time, new_ul, user_input_time);
-
-    // console.log(TIME_MANAGE_OBJ);
-    TIME_MANAGE_OBJ[unique_id_name].sets.add(TIME_MANAGE_OBJ[unique_id_name].unique_id_time);
-    TIME_MANAGE_OBJ[unique_id_name].unique_id_time++;
-}
-
-/**
- * 「開いてる時間を編集」が押された時、ユーザーが今まで入力した時間を表示する
- * @param {unique_id_name} ユーザーのid
- * @param {new_ul} 時間を表示するulの要素
- * @return None
- */
-function show_time(unique_id_name, new_ul) {
-    let lst = Array.from(TIME_MANAGE_OBJ[unique_id_name].sets);
-    for (let i = 0; i < lst.length; i++) {
-        let unique_id_time = lst[i];
-        add_time_co(unique_id_name, unique_id_time, new_ul, TIME_MANAGE_OBJ[unique_id_name][unique_id_time]);
-    }
-}
-
-/**
- * add_time, show_timeの共通の機能
- * @param {unique_id_name} ユーザーのid
- * @param {unique_id_time} ユーザーのどの時間を扱うか、インデックス的な扱い
- * @param {new_ul} 時間を表示するulの要素
- * @param {text} 表示する時間
- * @return None
- */
-function add_time_co(unique_id_name, unique_id_time, new_ul, text) {
-    // まとめる
-    // new_ulに（li, button）を個別に追加したくない→（li, button）をdivに追加し、divをulに追加する→TIME_MANGEに追加
-
-    // li, button）をdivに追加
-    // divを作る
-    let new_div = document.createElement("div");
-
-    // liを作り、divの子要素にする
-    let new_li = document.createElement("li");
-    new_li.innerText = text;
-    new_div.appendChild(new_li);
-
-    // 削除buttonを作り、divの子要素にする
-    let new_btn_rmv = create_button(new_div, "削除");
-
-    // 削除する
-    new_btn_rmv.onclick = () => {
-        delete TIME_MANAGE_OBJ[unique_id_name][unique_id_time];
-        TIME_MANAGE.removeChild(new_btn_rmv.parentNode);
-        TIME_MANAGE_OBJ[unique_id_name].sets.delete(unique_id_time);
+        // TIME_MANGEに追加
+        TIME_MANAGE.appendChild(new_div);
         console.log(TIME_MANAGE_OBJ);
+        TIME_MANAGE_OBJ[unique_id_name].unique_id_time++;
     }
-
-    // divをulに追加する
-    new_ul.appendChild(new_div);
-
-    // TIME_MANGEに追加
-    TIME_MANAGE.appendChild(new_div);
 }
+
 
 
 NAME_ADD_BTN.onclick = () => {
