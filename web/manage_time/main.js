@@ -28,6 +28,19 @@ const ID_SET = new Set();
 let id_name = 0;
 
 /**
+ * ボタンを作成し、それを子要素にする
+ * @param {appendTo} 親要素
+ * @param {text} ボタンに表示する文字
+ * @return 作成されたボタン, (HTMLButtonElement)
+ */
+function create_button(appendTo, text) {
+    let new_del_btn = document.createElement("button");
+    new_del_btn.innerText = text;
+    appendTo.appendChild(new_del_btn);
+    return new_del_btn;
+}
+
+/**
  * 名前欄の「追加」を押されたときの処理
  * @param {add_name_input} ユーザーの名前
  * @return None
@@ -47,9 +60,7 @@ function add_name(add_name_input) {
     new_div.appendChild(new_li);
 
     // 削除ボタン
-    let new_del_btn = document.createElement("button");
-    new_del_btn.innerText = "削除";
-    new_div.appendChild(new_del_btn);
+    let new_del_btn = create_button(new_div, "削除");
     new_del_btn.onclick = () => {
         // 色々と管理
         delete TIME_MANAGE_OBJ[unique_id_name];
@@ -130,9 +141,7 @@ function edit_time(unique_id_name, add_name_input) {
         new_div.appendChild(new_li);
 
         // buttonを作り、divの子要素にする
-        let new_btn_rmv = document.createElement("button");
-        new_btn_rmv.innerText = "削除";
-        new_div.appendChild(new_btn_rmv);
+        let new_btn_rmv = create_button(new_div, "削除");
         new_btn_rmv.onclick = () => {
             delete TIME_MANAGE_OBJ[unique_id_name][unique_id_time];
             TIME_MANAGE.removeChild(new_btn_rmv.parentNode);
