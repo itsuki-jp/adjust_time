@@ -143,11 +143,11 @@ function edit_user_time(unique_id_name, add_name_input) {
 function add_time(unique_id_name, new_input, new_ul) {
     if (!verifier(new_input.value)) {
         new_input.value = "";
-        console.log("入力が正しくない");
         return;
     }
     let unique_id_time = TIME_MANAGE_OBJ[unique_id_name].unique_id_time;
-    let user_input_time = new_input.value;
+    let input_split = new_input.value.split(",")
+    let user_input_time = `${String(convert_time(input_split[0]))},${String(convert_time(input_split[1]))}`;
 
     // 時間を追加
     TIME_MANAGE_OBJ[unique_id_name][unique_id_time] = user_input_time;
@@ -191,7 +191,13 @@ function add_time_co(unique_id_name, unique_id_time, new_ul, text) {
 
     // liを作り、divの子要素にする
     let new_li = document.createElement("li");
-    new_li.innerText = text;
+
+    let input_split = text.split(",")
+    console.log(input_split);
+    let user_input_time = `${String(convert2string(input_split[0]))},${String(convert2string(input_split[1]))}`;
+    console.log(user_input_time);
+
+    new_li.innerText = user_input_time;
     new_div.appendChild(new_li);
 
     // 削除buttonを作り、divの子要素にする
@@ -235,19 +241,23 @@ function convert_time(time) {
     return 60 * hr + mn;
 }
 
+function convert2string(time) {
+    let hr = String(Math.floor(time / 60));
+    let mn = String(time % 60);
+    return `${hr}:${mn}`;
+
+}
+
 function verifier(user_input_time) {
     if (!check1(user_input_time)) { return false; }
     let se = user_input_time.split(",");
-    console.log("check1 clear");
 
     let start = se[0];
     let end = se[1];
     if (!check2(start)) { return false; }
     if (!check2(end)) { return false; }
-    console.log("check2 clear");
 
     if (!check3(start, end)) { return false };
-    console.log("check3 clear");
 
     return true;
 }
@@ -299,7 +309,6 @@ function imos() {
     // いろいろと変数
     let schedule = TIME_MANAGE_OBJ;
     let user_names = Object.keys(TIME_MANAGE_OBJ);
-    console.log(user_names);
     let n = ID_SET.size;
     ID_SET_ARR = Array.from(ID_SET);
 
@@ -367,7 +376,7 @@ function imos() {
     let time = [];
     let ppl = [];
     for (let i = 0; i < lst_sch.length - 1; i++) {
-        time.push([lst_sch[i], lst_sch[i + 1]]);
+        time.push([convert2string(lst_sch[i]), convert2string(lst_sch[i + 1])]);
         ppl.push([]);
         for (j of res_acc_info[i]) {
             ppl[i].push(user_names[j]);
