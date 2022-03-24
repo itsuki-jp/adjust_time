@@ -1,0 +1,35 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.area1 {
+    margin-top: 5%;
+    padding: 1%;
+    background-color: aqua;
+}
+
+.center_inline {
+    text-align: center
+}
+
+button {
+    border-radius: 5px;
+    border: none;
+    padding: 4px 16px;
+    margin-left: 5px;
+}
+
+button:hover {
+    background-color: rgb(77, 77, 247);
+    color: white;
+    cursor: pointer;
+}
+
+input {
+    border-radius: 10px;
+    border: none;
+    padding: 8px 16px;
+    outline: none;
+}
