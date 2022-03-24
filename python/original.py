@@ -37,7 +37,7 @@ class ManageSchedule:
             member |= set(self.acc_info[i][0])
             member -= set(self.acc_info[i][1])
             res_acc_info.append(list(member))
-
+        print(self.acc)
         return res_acc, res_acc_info
 
     def result( self, lst_sch ):
@@ -89,12 +89,12 @@ def user_input():
 def main():
     # ログっぽく出力するやつ
     # print("sets :", sets, file=sys.stderr)
-    """n = 3
+    n = 3
     name = ["0", "1", "2"]
     schedule = [[(0, 3), (5, 10)],
                 [(2, 7)],
-                [(5, 7)]]"""
-    n, name, schedule = user_input()
+                [(5, 7)]]
+    # n, name, schedule = user_input()
     manager = ManageSchedule(n, schedule, name)
     manager.main()
     time, ppl = manager.time_ppl
