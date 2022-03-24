@@ -1,7 +1,7 @@
 const NAME_INPUT = document.getElementById("name_input");
 const SELECT_NAME = document.getElementById("name");
 const NAME_ADD_BTN = document.getElementById("name_add_btn");
-const DISPLAY_NAME = document.getElementById("display_name");
+const SELECT_AREA = document.getElementById("select_area");
 const TIME_MANAGE = document.getElementById("manage");
 
 /**
@@ -52,6 +52,7 @@ function create_button(appendTo, text) {
  * @return None
  */
 function add_name(add_name_input) {
+    if (add_name_input.length === 0) { return; }
     NAME_INPUT.value = "";
     let unique_id_name = id_name;
     TIME_MANAGE_OBJ[unique_id_name] = {};
@@ -59,16 +60,31 @@ function add_name(add_name_input) {
     TIME_MANAGE_OBJ[unique_id_name].sets = new Set();
     ID_SET.add(unique_id_name);
     USERNAME[unique_id_name] = add_name_input;
-    // 大枠
-    let new_div = document.createElement("div");
 
-    // 入力された名前を表示するやつ
-    let new_li = document.createElement("li");
-    new_li.innerText = add_name_input;
-    new_div.appendChild(new_li);
+    let new_option = document.createElement("option");
+    new_option.innerText = add_name_input;
+    new_option.value = unique_id_name;
+    SELECT_NAME.appendChild(new_option);
+
+    id_name++;
+}
+
+/**
+ * selectで要素が選ばれたときの処理
+ */
+function open_select(unique_id_name) {
+    let childElementCount = SELECT_AREA.childElementCount;
+    console.log(childElementCount);
+    if ((unique_id_name === "-1") && (childElementCount != 1)) {
+        SELECT_AREA.removeChild(SELECT_AREA.lastChild);
+        TIME_MANAGE.innerHTML = "";
+        return;
+    }
+    if (childElementCount != 1) { SELECT_AREA.removeChild(SELECT_AREA.lastChild) }
+    let add_name_input = USERNAME[unique_id_name];
 
     // 削除ボタン
-    let new_del_btn = create_button(new_div, "削除");
+    let new_del_btn = create_button(SELECT_AREA, "削除");
     new_del_btn.onclick = () => {
         // 色々と管理
         delete TIME_MANAGE_OBJ[unique_id_name];
@@ -76,22 +92,15 @@ function add_name(add_name_input) {
 
         // 親要素を削除
         // DISPLAY_NAME.removeChild(new_li.parentNode);
-        DISPLAY_NAME.removeChild(new_del_btn.parentNode);
+        SELECT_AREA.removeChild(new_del_btn.parentNode);
 
         if (unique_id_name === name_manage_status) {
             TIME_MANAGE.innerHTML = "";
         }
     }
 
-    // 時間調節ボタン
-    let new_mng_btn = create_button(new_div, "空いてる時間を編集");
-    new_mng_btn.onclick = () => {
-        edit_user_time(unique_id_name, add_name_input);
-    }
-
-    // 子要素にする
-    DISPLAY_NAME.appendChild(new_div);
-    id_name++;
+    // 時間調節
+    edit_user_time(unique_id_name, add_name_input);
 }
 
 
@@ -109,7 +118,8 @@ function edit_user_time(unique_id_name) {
     name_manage_status = unique_id_name;
 
     let new_p = document.createElement("p"); // ユーザー名を表示
-    new_p.innerText = add_name_input;
+    new_p.innerText = `名前 : ${add_name_input}`;
+
     TIME_MANAGE.appendChild(new_p);
 
     let new_input = document.createElement("input"); // 入力欄
@@ -420,17 +430,20 @@ function display_imos(time, ppl) {
     TIME_MANAGE.appendChild(new_ul);
 }
 
-
-
-NAME_ADD_BTN.onclick = () => {
-    add_name(NAME_INPUT.value);
-}
-
-NAME_INPUT.onkeydown = event => {
-    if (event.key === 'Enter') {
+function main() {
+    NAME_ADD_BTN.onclick = () => {
         add_name(NAME_INPUT.value);
     }
+
+    NAME_INPUT.onkeydown = event => {
+        if (event.key === 'Enter') {
+            add_name(NAME_INPUT.value);
+        }
+    }
+    document.getElementById("use_imos_btn").onclick = () => {
+        imos();
+    }
+
+    SELECT_NAME.addEventListener('change', function() { open_select(SELECT_NAME.value) });
 }
-document.getElementById("use_imos_btn").onclick = () => {
-    imos();
-}
+main();
