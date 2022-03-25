@@ -9,6 +9,10 @@
     padding: 5px;
 }
 
+.container {
+    width: 600px;
+}
+
 #select_area {
     margin-top: 30px;
 }
@@ -22,21 +26,52 @@
 }
 
 button {
+    margin: 10px;
     border-radius: 5px;
     border: none;
     padding: 4px 16px;
-    margin-left: 5px;
+    height: 40px;
+    background-color: rgb(72, 196, 154);
+    color: white;
 }
 
 button:hover {
     background-color: rgb(77, 77, 247);
-    color: white;
     cursor: pointer;
 }
 
 input {
-    border-radius: 10px;
-    border: none;
-    padding: 8px 16px;
+    height: 40px;
+    border: 2px solid black;
     outline: none;
+    border-radius: 5px;
+    padding: 8px 16px;
+}
+
+input:focus {
+    border: 2px solid rgb(114, 114, 243);
+}
+
+select {
+    border: 1px solid black;
+    border-radius: 5px;
+    min-width: 100px;
+    padding: 8px 10px;
+}
+
+.divv {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px;
+}
+
+p {
+    margin: 20px;
+}
+
+h1 {
+    padding: 20px;
+    background-color: rgb(72, 196, 154);
+    color: white;
 }

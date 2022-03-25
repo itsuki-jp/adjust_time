@@ -112,6 +112,10 @@ function open_select(unique_id_name) {
  */
 function edit_user_time(unique_id_name) {
     let add_name_input = USERNAME[unique_id_name];
+
+    let new_div = document.createElement("div");
+    new_div.classList.add("divv")
+
     console.log(TIME_MANAGE_OBJ);
     // 基本的なUI
     TIME_MANAGE.innerHTML = "";
@@ -120,17 +124,17 @@ function edit_user_time(unique_id_name) {
     let new_p = document.createElement("p"); // ユーザー名を表示
     new_p.innerText = `名前 : ${add_name_input}`;
 
-    TIME_MANAGE.appendChild(new_p);
+    new_div.appendChild(new_p);
 
     let new_input = document.createElement("input"); // 入力欄
     new_input.placeholder = "空いてる時間を入力";
-    TIME_MANAGE.appendChild(new_input);
+    new_div.appendChild(new_input);
     // 追加ボタン
-    let new_btn_add = create_button(TIME_MANAGE, "追加");
+    let new_btn_add = create_button(new_div, "追加");
 
     // 時間を追加する
     let new_ul = document.createElement("ul"); // ユーザーの空いている時間を表示するリスト
-    TIME_MANAGE.appendChild(new_ul);
+    new_div.appendChild(new_ul);
 
     // ユーザーが今まで入力した時間を表示する
     show_time(unique_id_name, new_ul);
@@ -146,6 +150,7 @@ function edit_user_time(unique_id_name) {
             add_time(unique_id_name, new_input, new_ul);
         }
     }
+    TIME_MANAGE.appendChild(new_div);
 }
 /**
  * 時間調節の「追加」を押されたときの処理
@@ -202,6 +207,7 @@ function add_time_co(unique_id_name, unique_id_time, new_ul, text) {
     // li, button）をdivに追加
     // divを作る
     let new_div = document.createElement("div");
+    new_div.classList.add("divv");
 
     // liを作り、divの子要素にする
     let new_li = document.createElement("li");
